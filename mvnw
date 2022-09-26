@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2124
 # ----------------------------------------------------------------------------
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -45,6 +46,7 @@ if [ -z "$MAVEN_SKIP_RC" ]; then
   fi
 
   if [ -f "$HOME/.mavenrc" ]; then
+    # shellcheck source=./.mavenrc
     . "$HOME/.mavenrc"
   fi
 
@@ -99,7 +101,7 @@ if [ -z "$M2_HOME" ]; then
   # make it fully qualified
   M2_HOME=$(cd "$M2_HOME" && pwd)
 
-  cd "$saveddir"
+  cd "$saveddir" || exit
   # echo Using m2 at $M2_HOME
 fi
 
@@ -117,12 +119,12 @@ fi
 if $mingw; then
   [ -n "$M2_HOME" ] &&
     M2_HOME="$( (
-      cd "$M2_HOME"
+      cd "$M2_HOME" || exit
       pwd
     ))"
   [ -n "$JAVA_HOME" ] &&
     JAVA_HOME="$( (
-      cd "$JAVA_HOME"
+      cd "$JAVA_HOME" || exit
       pwd
     ))"
 fi
@@ -132,6 +134,7 @@ if [ -z "$JAVA_HOME" ]; then
   if [ -n "$javaExecutable" ] && ! [ "$(expr \"$javaExecutable\" : '\([^ ]*\)')" = "no" ]; then
     # readlink(1) is not available as standard on Solaris 10.
     readLink=$(which readlink)
+    # shellcheck disable=SC2046
     if [ ! $(expr "$readLink" : '\([^ ]*\)') = "no" ]; then
       if $darwin; then
         javaHome="$(dirname \"$javaExecutable\")"
@@ -194,7 +197,7 @@ find_maven_basedir() {
     # workaround for JBEAP-8937 (on Solaris 10/Sparc)
     if [ -d "${wdir}" ]; then
       wdir=$(
-        cd "$wdir/.."
+        cd "$wdir/.." || exit
         pwd
       )
     fi
